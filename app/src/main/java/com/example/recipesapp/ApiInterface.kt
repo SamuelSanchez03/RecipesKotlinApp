@@ -5,14 +5,14 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.QueryMap
 
-interface APIInterface {
+interface ApiInterface {
     //API key = 0419d9cd6d75420aae0691315b632fb7
     //API call for getting recipes according to a list of ingredients
-    //querys map requires a string of ingredients separated by comas
+    //queries map requires a string of ingredients separated by comas
     //and a number as string, representing the maximum number of recipes the call will return
     //Visit https://spoonacular.com/food-api/docs#Search-Recipes-by-Ingredients for full documentation
     @GET("findByIngredients?apiKey=0419d9cd6d75420aae0691315b632fb7")
-    fun getData(@QueryMap querys: HashMap<String, String>): Call<List<RecipesItem>>
+    fun getRecipes (@QueryMap queries: HashMap<String, String>): Call<List<RecipesItem>>
 
     //API call for getting the summary of a specific recipe
     //ID can be gotten by the previous API call
