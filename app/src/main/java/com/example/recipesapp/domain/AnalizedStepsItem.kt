@@ -1,4 +1,4 @@
-package com.example.recipesapp
+package com.example.recipesapp.domain
 
 //AnalizedStepsItem for managing analized steps API call
 data class AnalizedStepsItem(

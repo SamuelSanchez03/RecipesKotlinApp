@@ -1,4 +1,4 @@
-package com.example.recipesapp
+package com.example.recipesapp.domain
 
 data class UsedIngredient(
     val aisle: String,

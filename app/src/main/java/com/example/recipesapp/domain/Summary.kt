@@ -1,4 +1,4 @@
-package com.example.recipesapp
+package com.example.recipesapp.domain
 
 //Summary class for managing summary API calls
 data class Summary(
