@@ -84,6 +84,11 @@ dependencies {
 	val daggerVersion = "2.44"
 	implementation("com.google.dagger:hilt-android:$daggerVersion")
 	kapt("com.google.dagger:hilt-android-compiler:$daggerVersion")
+	
+	//Hilt viewModel Navigation
+	implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+	
+	implementation("io.coil-kt:coil-compose:2.4.0")
 }
 
 kapt {

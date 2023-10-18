@@ -1,20 +1,27 @@
 package com.example.recipesapp.network
 
 import android.util.Log
-import com.example.recipesapp.domain.RecipesItem
+import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.api.ApiKey
+import com.example.recipesapp.domain.repository.RecipeRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ApiCalls @Inject constructor(private val api: ApiInterface, private val apiKey: ApiKey) {
-	/*TODO(Remove run blocking statements, should be called from ViewModel coroutine)*/
+class RecipeApiRepository @Inject constructor(
+	private val api: ApiInterface,
+	private val apiKey: ApiKey
+) : RecipeRepository {
 	//Function to get a list of recipes that include a set of ingredients
-	fun getRecipesByIngredients(queries: HashMap<String, String>): List<RecipesItem> {
-		return runBlocking { api.getRecipes(apiKey.key, queries).body() ?: emptyList() }
-	}
+	override suspend fun getRecipesByIngredients(ingredients: Map<String, String>): List<RecipeItem> =
+		withContext(Dispatchers.IO) {
+			api.getRecipes(apiKey.key, ingredients).body() ?: emptyList()
+		}
 	
+	/*TODO(Remove run blocking statements, should be called from ViewModel coroutine)*/
 	//Function to get the summary of a specific recipe
 	fun getSummaryByID(id: Int) {
 		val response = runBlocking { api.getSummary(apiKey = apiKey.key, id = id) }

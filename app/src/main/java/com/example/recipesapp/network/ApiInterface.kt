@@ -1,7 +1,7 @@
 package com.example.recipesapp.network
 
 import com.example.recipesapp.domain.AnalizedStepsItem
-import com.example.recipesapp.domain.RecipesItem
+import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.Summary
 import retrofit2.Response
 import retrofit2.http.GET
@@ -18,8 +18,8 @@ interface ApiInterface {
 	@GET("findByIngredients")
 	suspend fun getRecipes(
 		@Query("apiKey") apiKey: String,
-		@QueryMap queries: HashMap<String, String>
-	): Response<List<RecipesItem>>
+		@QueryMap queries: Map<String, String>
+	): Response<List<RecipeItem>>
 	
 	//API call for getting the summary of a specific recipe
 	//ID can be gotten by the previous API call
