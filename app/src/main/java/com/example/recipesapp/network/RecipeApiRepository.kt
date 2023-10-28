@@ -13,24 +13,25 @@ import javax.inject.Singleton
 @Singleton
 class RecipeApiRepository @Inject constructor(
 	private val api: ApiInterface,
-	private val apiKey: ApiKey
+	apiKey: ApiKey
 ) : RecipeRepository {
+	private val key by apiKey
 	//Function to get a list of recipes that include a set of ingredients
 	override suspend fun getRecipesByIngredients(ingredients: Map<String, String>): List<RecipeItem> =
 		withContext(Dispatchers.IO) {
-			api.getRecipes(apiKey.key, ingredients).body() ?: emptyList()
+			api.getRecipes(key, ingredients).body() ?: emptyList()
 		}
 	
 	/*TODO(Remove run blocking statements, should be called from ViewModel coroutine)*/
 	//Function to get the summary of a specific recipe
 	fun getSummaryByID(id: Int) {
-		val response = runBlocking { api.getSummary(apiKey = apiKey.key, id = id) }
+		val response = runBlocking { api.getSummary(apiKey = key, id = id) }
 		Log.d("MainActivity", response.body().toString())
 	}
 	
 	//Function to get instructions for a specific recipe
 	fun getInstructionsByID(id: Int) {
-		val response = runBlocking { api.getSteps(apiKey = apiKey.key, id = id) }
+		val response = runBlocking { api.getSteps(apiKey = key, id = id) }
 		Log.d("MainActivity", response.body().toString())
 	}
 	

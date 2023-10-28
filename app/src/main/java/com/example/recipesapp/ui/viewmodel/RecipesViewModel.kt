@@ -20,7 +20,7 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 	val currentRecipes: StateFlow<List<RecipeItem>> = _currentRecipes.asStateFlow()
 	
 	init {
-		val queries = mapOf("ingredients" to "apples,sugar,flour", "number" to "5")
+		val queries = mapOf("ingredients" to "apples,sugar,flour", "number" to "25")
 		getRecipesBiIngredients(queries)
 	}
 	

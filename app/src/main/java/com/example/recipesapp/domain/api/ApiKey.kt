@@ -1,3 +1,7 @@
 package com.example.recipesapp.domain.api
 
-data class ApiKey(val key: String)
+import kotlin.reflect.KProperty
+
+data class ApiKey(private val key: String) {
+	operator fun getValue(thisRef: Any?, property: KProperty<*>): String = key
+}

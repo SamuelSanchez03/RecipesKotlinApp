@@ -4,26 +4,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.List
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +30,11 @@ const val FIND_RECIPE_SCREEN = "FindRecipeScreen"
 
 @Composable
 fun RecipeScreen(modifier: Modifier = Modifier, recipes: List<RecipeItem>) {
-	LazyColumn(modifier = modifier, contentPadding = PaddingValues(all = 8.dp)) {
+	LazyVerticalGrid(
+		modifier = modifier, contentPadding = PaddingValues(all = 4.dp),
+		columns = GridCells.Fixed(count = 3),
+		horizontalArrangement = Arrangement.spacedBy(4.dp),
+	) {
 		items(recipes, key = { it.id }) {
 			RecipeItemView(modifier = Modifier, recipeItem = it)
 		}
@@ -50,11 +49,12 @@ fun RecipeItemView(
 		SubcomposeAsyncImage(
 			model = recipeItem.image,
 			loading = {
-				CircularProgressIndicator()
+				LinearProgressIndicator(modifier = Modifier.padding(2.dp))
 			},
 			contentDescription = recipeItem.title,
 			modifier = it,
 			contentScale = ContentScale.Crop
+			
 		)
 	}
 ) {
@@ -64,27 +64,19 @@ fun RecipeItemView(
 			.fillMaxWidth()
 			.padding(vertical = padding / 2)
 	) {
-		Column(verticalArrangement = Arrangement.Center) {
-			Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-				val modifierRowContent = Modifier.padding(start = padding, top = padding)
-				Icon(
-					imageVector = Icons.Outlined.List,
-					contentDescription = null,
-					modifier = modifierRowContent.align(Alignment.CenterVertically)
-				)
-				Text(
-					text = recipeItem.title,
-					fontSize = 20.sp,
-					fontWeight = FontWeight.Bold,
-					modifier = modifierRowContent,
-					maxLines = 2
-				)
-			}
+		Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+			Text(
+				text = recipeItem.title,
+				fontSize = 16.sp,
+				fontWeight = FontWeight.Bold,
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(all = 4.dp),
+				maxLines = 2,
+				textAlign = TextAlign.Center
+			)
 			image(
-				Modifier
-					.size(100.dp)
-					.padding(start = padding, top = padding, bottom = padding)
-					.clip(CircleShape)
+				Modifier.fillMaxSize()
 			)
 		}
 	}
@@ -93,8 +85,8 @@ fun RecipeItemView(
 @Composable
 @Preview
 fun RecipeItemPreview() {
-	RecipeItemView(
-		recipeItem = RecipeItem(
+	val data = listOf(
+		RecipeItem(
 			id = 640352,
 			title = "Cranberry Apple Crisp",
 			image = "https://spoonacular.com/recipeImages/632583-312x231.jpg",
@@ -105,12 +97,72 @@ fun RecipeItemPreview() {
 			usedIngredients = emptyList(),
 			likes = 2,
 			unusedIngredients = emptyList()
-		), image = {
-			Image(
-				painter = painterResource(id = R.drawable.apple_crisp),
-				contentDescription = null,
-				modifier = it
+		),
+		RecipeItem(
+			id = 640352,
+			title = "Cranberry Apple Crisp",
+			image = "https://spoonacular.com/recipeImages/632583-312x231.jpg",
+			usedIngredientCount = 1,
+			imageType = "jpg",
+			missedIngredientCount = 3,
+			missedIngredients = emptyList(),
+			usedIngredients = emptyList(),
+			likes = 2,
+			unusedIngredients = emptyList()
+		),
+		RecipeItem(
+			id = 640352,
+			title = "Cranberry Apple Crisp",
+			image = "https://spoonacular.com/recipeImages/632583-312x231.jpg",
+			usedIngredientCount = 1,
+			imageType = "jpg",
+			missedIngredientCount = 3,
+			missedIngredients = emptyList(),
+			usedIngredients = emptyList(),
+			likes = 2,
+			unusedIngredients = emptyList()
+		),
+		RecipeItem(
+			id = 640352,
+			title = "Cranberry Apple Crisp",
+			image = "https://spoonacular.com/recipeImages/632583-312x231.jpg",
+			usedIngredientCount = 1,
+			imageType = "jpg",
+			missedIngredientCount = 3,
+			missedIngredients = emptyList(),
+			usedIngredients = emptyList(),
+			likes = 2,
+			unusedIngredients = emptyList()
+		),
+		RecipeItem(
+			id = 640352,
+			title = "Cranberry Apple Crisp",
+			image = "https://spoonacular.com/recipeImages/632583-312x231.jpg",
+			usedIngredientCount = 1,
+			imageType = "jpg",
+			missedIngredientCount = 3,
+			missedIngredients = emptyList(),
+			usedIngredients = emptyList(),
+			likes = 2,
+			unusedIngredients = emptyList()
+		)
+	)
+	LazyVerticalGrid(
+		modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(all = 4.dp),
+		columns = GridCells.Fixed(count = 3),
+		horizontalArrangement = Arrangement.spacedBy(4.dp),
+	) {
+		items(data) {
+			RecipeItemView(
+				recipeItem = it, image = { modifier ->
+					Image(
+						painter = painterResource(id = R.drawable.apple_crisp),
+						contentDescription = null,
+						modifier = modifier,
+						contentScale = ContentScale.FillWidth
+					)
+				}
 			)
 		}
-	)
+	}
 }
