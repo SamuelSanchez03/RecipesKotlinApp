@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-	private const val BASE_URL = "https://api.spoonacular.com/recipes/"
+	private const val BASE_URL = "https://api.spoonacular.com/"
 	
 	//RetrofitBuilder for making API calls from the ApiInterface class
 	@Singleton

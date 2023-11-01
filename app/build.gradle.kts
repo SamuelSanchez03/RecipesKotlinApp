@@ -61,7 +61,7 @@ dependencies {
 	androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 	
 	// Material Design 3 for compose
-	implementation("androidx.compose.material3:material3")
+	implementation("androidx.compose.material3:material3:1.1.2")
 	
 	// Optional - Integration with activities
 	implementation("androidx.activity:activity-compose:1.8.0")
@@ -88,6 +88,7 @@ dependencies {
 	//Hilt viewModel Navigation
 	implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 	
+	//Coil for loading images from URL
 	implementation("io.coil-kt:coil-compose:2.4.0")
 }
 

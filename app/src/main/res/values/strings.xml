@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">RecipesApp</string>
     <string name="api_key">0419d9cd6d75420aae0691315b632fb7</string>
+    <string name="used_ingredients">Used Ingredients %d</string>
+    <string name="missed_ingredients">Missed Ingredients %d</string>
+    <string name="search_by_ingredient">Search Recipes By Ingredients</string>
 </resources>

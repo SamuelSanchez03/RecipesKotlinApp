@@ -1,5 +1,9 @@
 package com.example.recipesapp.ui.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.domain.RecipeItem
@@ -18,16 +22,28 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 	private val _currentRecipes: MutableStateFlow<List<RecipeItem>> =
 		MutableStateFlow(value = emptyList())
 	val currentRecipes: StateFlow<List<RecipeItem>> = _currentRecipes.asStateFlow()
+	val searchedIngredients = mutableStateListOf<String>()
+	var isSearching by mutableStateOf(false)
+		private set
 	
 	init {
 		val queries = mapOf("ingredients" to "apples,sugar,flour", "number" to "25")
-		getRecipesBiIngredients(queries)
+		getRecipesByIngredients(queries)
 	}
 	
 	/*TODO(Error Handling)*/
-	fun getRecipesBiIngredients(ingredients: Map<String, String>) {
+	fun getRecipesByIngredients(ingredients: Map<String, String>) {
 		viewModelScope.launch {
 			_currentRecipes.value = recipeRepository.getRecipesByIngredients(ingredients)
+		}
+	}
+	fun onSearchIngredientQuery(newQuery: String) {
+		isSearching = true
+		viewModelScope.launch {
+			val result = recipeRepository.autocompleteIngredientSearch(newQuery)
+			if (searchedIngredients.isNotEmpty()) searchedIngredients.clear()
+			searchedIngredients.addAll(result.map { it.name })
+			isSearching = false
 		}
 	}
 }

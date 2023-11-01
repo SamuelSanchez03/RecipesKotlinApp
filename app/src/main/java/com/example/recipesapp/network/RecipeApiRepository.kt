@@ -2,6 +2,7 @@ package com.example.recipesapp.network
 
 import android.util.Log
 import com.example.recipesapp.domain.RecipeItem
+import com.example.recipesapp.domain.SearchedIngredient
 import com.example.recipesapp.domain.api.ApiKey
 import com.example.recipesapp.domain.repository.RecipeRepository
 import kotlinx.coroutines.Dispatchers
@@ -16,10 +17,17 @@ class RecipeApiRepository @Inject constructor(
 	apiKey: ApiKey
 ) : RecipeRepository {
 	private val key by apiKey
+	
 	//Function to get a list of recipes that include a set of ingredients
 	override suspend fun getRecipesByIngredients(ingredients: Map<String, String>): List<RecipeItem> =
 		withContext(Dispatchers.IO) {
 			api.getRecipes(key, ingredients).body() ?: emptyList()
+		}
+	
+	/**/
+	override suspend fun autocompleteIngredientSearch(query: String): List<SearchedIngredient> =
+		withContext(Dispatchers.IO) {
+			api.autocompleteIngredientSearch(key ,query).body() ?: emptyList()
 		}
 	
 	/*TODO(Remove run blocking statements, should be called from ViewModel coroutine)*/

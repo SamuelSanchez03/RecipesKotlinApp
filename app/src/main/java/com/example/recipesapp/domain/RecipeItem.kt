@@ -1,7 +1,7 @@
 package com.example.recipesapp.domain
 
 //RecipesItem class for managing recipes search by ingredients API call
-//The most useful atribute here is the ID, for later API requests
+//The most useful attribute here is the ID, for later API requests
 //Title and image can be also be use when the recipe is display
 data class RecipeItem(
 	val id: Int,
