@@ -1,6 +1,5 @@
 package com.example.recipesapp.ui.screen
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,8 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,13 +43,7 @@ fun RecipeScreen(modifier: Modifier = Modifier, recipes: List<RecipeItem>) {
 	LazyVerticalGrid(
 		modifier = modifier,
 		contentPadding = PaddingValues(all = padding),
-		columns = GridCells.Fixed(
-			count =
-			if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT)
-				2
-			else
-				3
-		),
+		columns = GridCells.Fixed(count = integerResource(id = R.integer.grid_count)),
 		horizontalArrangement = Arrangement.spacedBy(padding),
 	) {
 		items(recipes, key = { it.id }) {
@@ -84,7 +77,7 @@ fun RecipeItemView(
 		Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
 			Text(
 				text = recipeItem.title,
-				fontSize = 18.sp,
+				fontSize = dimensionResource(id = R.dimen.text_card_ingredient).value.sp,
 				fontWeight = FontWeight.Bold,
 				modifier = Modifier
 					.fillMaxWidth()
