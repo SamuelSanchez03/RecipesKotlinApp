@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -18,7 +16,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.recipesapp.domain.SelectableIngredient
 import com.example.recipesapp.ui.screen.FIND_RECIPE_SCREEN
 import com.example.recipesapp.ui.screen.RecipeScreen
 import com.example.recipesapp.ui.viewmodel.RecipesViewModel
@@ -33,24 +30,21 @@ class MainActivity : ComponentActivity() {
 			val recipesViewModel = hiltViewModel<RecipesViewModel>()
 			var active by rememberSaveable { mutableStateOf(false) }
 			var query by rememberSaveable { mutableStateOf(String()) }
-			val selectedIngredients = remember {
-				mutableStateListOf<SelectableIngredient>()
-			}
 			Scaffold(
 				topBar = {
 					TopSearchBar(
 						query = query,
 						active = active,
 						isSearching = recipesViewModel.isSearching,
-						selectedIngredients = selectedIngredients,
+						selectedIngredients = recipesViewModel.selectedIngredients,
 						ingredientsResultSearch = recipesViewModel.searchedIngredients,
 						onSelectIngredient = {
 							if (!it.isSelected)
-								selectedIngredients.add(it)
+								recipesViewModel.selectedIngredients.add(it)
 							it.isSelected = true
 						},
 						onRemoveSelectedIngredient = {
-							selectedIngredients.remove(it)
+							recipesViewModel.selectedIngredients.remove(it)
 							it.isSelected = false
 						},
 						onQueryChange = {
@@ -60,7 +54,8 @@ class MainActivity : ComponentActivity() {
 						onSearchRecipes = {
 							recipesViewModel.getRecipesByIngredients(
 								mapOf(
-									RecipesViewModel.INGREDIENTS to selectedIngredients.joinToString(
+									RecipesViewModel.INGREDIENTS
+											to recipesViewModel.selectedIngredients.joinToString(
 										separator = ","
 									) { it.name }
 								)

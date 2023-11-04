@@ -28,6 +28,7 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 		MutableStateFlow(value = emptyList())
 	val currentRecipes: StateFlow<List<RecipeItem>> = _currentRecipes.asStateFlow()
 	val searchedIngredients = mutableStateListOf<SelectableIngredient>()
+	val selectedIngredients = mutableStateListOf<SelectableIngredient>()
 	var isSearching by mutableStateOf(false)
 		private set
 	
@@ -42,6 +43,7 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 			_currentRecipes.value = recipeRepository.getRecipesByIngredients(ingredients)
 		}
 	}
+	
 	fun onSearchIngredientQuery(newQuery: String) {
 		isSearching = true
 		viewModelScope.launch {
