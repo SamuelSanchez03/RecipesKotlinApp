@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<dimen name="padding_small">2dp</dimen>
-	<dimen name="text_card_ingredient">16sp</dimen>
+	<dimen name="medium_padding">12dp</dimen>
+	<dimen name="subtitles">16sp</dimen>
+	<dimen name="titles">22sp</dimen>
 </resources>

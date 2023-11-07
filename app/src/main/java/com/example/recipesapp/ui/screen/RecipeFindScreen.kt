@@ -1,5 +1,8 @@
 package com.example.recipesapp.ui.screen
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,17 +40,42 @@ import com.example.recipesapp.domain.RecipeItem
 
 const val FIND_RECIPE_SCREEN = "FindRecipeScreen"
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RecipeScreen(modifier: Modifier = Modifier, recipes: List<RecipeItem>) {
+fun RecipeScreen(
+	modifier: Modifier = Modifier,
+	recipes: List<RecipeItem>,
+	showLoading: Boolean,
+	onLoading: @Composable () -> Unit
+) {
 	val padding = dimensionResource(id = R.dimen.padding_small)
-	LazyVerticalGrid(
-		modifier = modifier,
-		contentPadding = PaddingValues(all = padding),
-		columns = GridCells.Fixed(count = integerResource(id = R.integer.grid_count)),
-		horizontalArrangement = Arrangement.spacedBy(padding),
-	) {
-		items(recipes, key = { it.id }) {
-			RecipeItemView(modifier = Modifier, recipeItem = it)
+	Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Top) {
+		AnimatedVisibility(
+			visible = showLoading,
+			modifier = Modifier
+				.align(Alignment.CenterHorizontally)
+				.padding(
+					all = dimensionResource(
+						id = R.dimen.medium_padding
+					)
+				)
+		) {
+			onLoading()
+		}
+		LazyVerticalGrid(
+			modifier = modifier,
+			contentPadding = PaddingValues(all = padding),
+			columns = GridCells.Fixed(count = integerResource(id = R.integer.grid_count)),
+			horizontalArrangement = Arrangement.spacedBy(padding),
+		) {
+			items(recipes, key = { it.id }) {
+				RecipeItemView(
+					modifier = Modifier
+						.animateItemPlacement()
+						.animateContentSize(),
+					recipeItem = it
+				)
+			}
 		}
 	}
 }
@@ -77,7 +105,7 @@ fun RecipeItemView(
 		Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
 			Text(
 				text = recipeItem.title,
-				fontSize = dimensionResource(id = R.dimen.text_card_ingredient).value.sp,
+				fontSize = dimensionResource(id = R.dimen.subtitles).value.sp,
 				fontWeight = FontWeight.Bold,
 				modifier = Modifier
 					.fillMaxWidth()

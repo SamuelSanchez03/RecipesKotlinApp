@@ -8,34 +8,50 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.recipesapp.ui.screen.FIND_RECIPE_SCREEN
+import com.example.recipesapp.ui.screen.GettingRecipesScreen
+import com.example.recipesapp.ui.screen.NotFoundRecipesScreen
 import com.example.recipesapp.ui.screen.RecipeScreen
+import com.example.recipesapp.ui.state.RecipeSearchState
 import com.example.recipesapp.ui.viewmodel.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+	@OptIn(ExperimentalComposeUiApi::class)
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContent {
 			val navController = rememberNavController()
 			val recipesViewModel = hiltViewModel<RecipesViewModel>()
 			var active by rememberSaveable { mutableStateOf(false) }
+			var recipesToFind by rememberSaveable { mutableIntStateOf(10) }
 			var query by rememberSaveable { mutableStateOf(String()) }
 			Scaffold(
 				topBar = {
+					val keyboardController = LocalSoftwareKeyboardController.current
+					val focusManager = LocalFocusManager.current
 					TopSearchBar(
 						query = query,
+						onClearQuery = { query = String() },
 						active = active,
 						isSearching = recipesViewModel.isSearching,
+						recipesToFind = recipesToFind,
+						onChangeRecipesToFind = {
+							recipesToFind = it
+						},
 						selectedIngredients = recipesViewModel.selectedIngredients,
 						ingredientsResultSearch = recipesViewModel.searchedIngredients,
 						onSelectIngredient = {
@@ -50,14 +66,19 @@ class MainActivity : ComponentActivity() {
 						onQueryChange = {
 							query = it
 						},
-						onSearch = recipesViewModel::onSearchIngredientQuery,
+						onSearch = {
+							recipesViewModel.onSearchIngredientQuery(it)
+							focusManager.clearFocus(force = true)
+							keyboardController?.hide()
+						},
 						onSearchRecipes = {
 							recipesViewModel.getRecipesByIngredients(
 								mapOf(
 									RecipesViewModel.INGREDIENTS
 											to recipesViewModel.selectedIngredients.joinToString(
 										separator = ","
-									) { it.name }
+									) { it.name },
+									RecipesViewModel.NUMBER to "$recipesToFind"
 								)
 							)
 							active = false
@@ -77,7 +98,17 @@ class MainActivity : ComponentActivity() {
 				) {
 					composable(FIND_RECIPE_SCREEN) {
 						val recipes by recipesViewModel.currentRecipes.collectAsState()
-						RecipeScreen(recipes = recipes)
+						when (val state = recipesViewModel.searchRecipesState) {
+							RecipeSearchState.NotFound -> NotFoundRecipesScreen()
+							else -> RecipeScreen(
+								recipes = recipes,
+								showLoading = state == RecipeSearchState.GettingRecipes
+							) {
+								GettingRecipesScreen()
+							}
+							/*RecipeSearchState.GettingRecipes -> GettingRecipesScreen()
+							RecipeSearchState.Success -> RecipeScreen(recipes = recipes)*/
+						}
 					}
 				}
 			}

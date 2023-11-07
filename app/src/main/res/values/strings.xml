@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">RecipesApp</string>
-    <string name="api_key">0419d9cd6d75420aae0691315b632fb7</string>
+    <string name="api_key">42c44861dc284ba5b6cfffb0867a72c5</string>
     <string name="used_ingredients">Used Ingredients %d</string>
     <string name="missed_ingredients">Missed Ingredients %d</string>
     <string name="search_by_ingredient">Search recipes by ingredients</string>
     <string name="search_recipes">Search recipes with %d ingredients</string>
     <string name="ingredients_found">Ingredients found for %s: %d</string>
+    <string name="clear_query">Clear query</string>
+    <string name="not_fund_recipes">We could not find recipes for the selected ingredients</string>
+    <string name="how_many_recipes">How many recipes do you want to see? %s</string>
+    <string-array name="loading_messages">
+        <item>This will be delicious!</item>
+        <item>Homemade food is always better</item>
+        <item>Anyone can cook</item>
+        <item>Let\'s see what\'s around here!</item>
+    </string-array>
 </resources>
