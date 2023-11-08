@@ -73,7 +73,7 @@ dependencies {
 	debugImplementation("androidx.compose.ui:ui-tooling")
 	
 	//Compose Navigation
-	val navVersion = "2.7.4"
+	val navVersion = "2.7.5"
 	implementation("androidx.navigation:navigation-compose:$navVersion")
 	
 	//Retrofit implementations for API calls

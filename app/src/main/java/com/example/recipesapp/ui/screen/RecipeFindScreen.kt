@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,6 +46,7 @@ const val FIND_RECIPE_SCREEN = "FindRecipeScreen"
 fun RecipeScreen(
 	modifier: Modifier = Modifier,
 	recipes: List<RecipeItem>,
+	onClickRecipeItem: (RecipeItem) -> Unit,
 	showLoading: Boolean,
 	onLoading: @Composable () -> Unit
 ) {
@@ -73,7 +75,8 @@ fun RecipeScreen(
 					modifier = Modifier
 						.animateItemPlacement()
 						.animateContentSize(),
-					recipeItem = it
+					recipeItem = it,
+					onClickRecipeItem = onClickRecipeItem
 				)
 			}
 		}
@@ -84,6 +87,7 @@ fun RecipeScreen(
 fun RecipeItemView(
 	modifier: Modifier = Modifier,
 	recipeItem: RecipeItem,
+	onClickRecipeItem: (RecipeItem) -> Unit,
 	image: @Composable (Modifier) -> Unit = {
 		SubcomposeAsyncImage(
 			model = recipeItem.image,
@@ -100,6 +104,9 @@ fun RecipeItemView(
 	Card(
 		modifier = modifier
 			.fillMaxWidth()
+			.clickable {
+				onClickRecipeItem(recipeItem)
+			}
 			.padding(vertical = padding / 2)
 	) {
 		Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
@@ -224,7 +231,9 @@ fun RecipeItemPreview() {
 	) {
 		items(data) {
 			RecipeItemView(
-				recipeItem = it, image = { modifierImage ->
+				recipeItem = it,
+				onClickRecipeItem = {},
+				image = { modifierImage ->
 					Image(
 						painter = painterResource(id = R.drawable.apple_crisp),
 						contentDescription = null,

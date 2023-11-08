@@ -6,8 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.recipesapp.domain.AnalyzedStepsItem
 import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.SelectableIngredient
+import com.example.recipesapp.domain.Summary
 import com.example.recipesapp.domain.repository.RecipeRepository
 import com.example.recipesapp.ui.state.RecipeSearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+typealias RecipeInformation = Pair<Summary, List<AnalyzedStepsItem>>
 @HiltViewModel
 class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeRepository) :
 	ViewModel() {
@@ -24,6 +26,13 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 	companion object {
 		const val INGREDIENTS = "ingredients"
 		const val NUMBER = "number"
+	}
+	
+	private val recipesInformation = mutableMapOf<Int, RecipeInformation>()
+	var currentRecipeInformation: RecipeInformation? by mutableStateOf(null)
+		private set
+	fun clearInformation() {
+		currentRecipeInformation = null
 	}
 	
 	private val _currentRecipes: MutableStateFlow<List<RecipeItem>> =
@@ -41,13 +50,12 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 		getRecipesByIngredients(queries)
 	}
 	
-	/*TODO(Error Handling)*/
 	fun getRecipesByIngredients(ingredients: Map<String, String>) {
 		searchRecipesState = RecipeSearchState.GettingRecipes
 		viewModelScope.launch {
 			_currentRecipes.value = recipeRepository.getRecipesByIngredients(ingredients)
 			searchRecipesState = if (currentRecipes.value.isEmpty())
-				 RecipeSearchState.NotFound
+				RecipeSearchState.NotFound
 			else
 				RecipeSearchState.Success
 		}
@@ -60,6 +68,20 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 			if (searchedIngredients.isNotEmpty()) searchedIngredients.clear()
 			searchedIngredients.addAll(result.map { it.toSelectableIngredient() })
 			isSearching = false
+		}
+	}
+	
+	fun getRecipeInformationById(id: Int) {
+		if (recipesInformation.containsKey(id)) {
+			currentRecipeInformation = recipesInformation.getValue(id)
+			return
+		}
+		viewModelScope.launch {
+			recipesInformation[id] = recipeRepository.run {
+				(getSummaryFromRecipeId(id) to getStepsToPrepareRecipeById(id)).also {
+					currentRecipeInformation = it
+				}
+			}
 		}
 	}
 }

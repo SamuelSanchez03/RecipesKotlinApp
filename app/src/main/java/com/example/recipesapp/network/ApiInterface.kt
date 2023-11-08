@@ -1,6 +1,6 @@
 package com.example.recipesapp.network
 
-import com.example.recipesapp.domain.AnalizedStepsItem
+import com.example.recipesapp.domain.AnalyzedStepsItem
 import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.SearchedIngredient
 import com.example.recipesapp.domain.Summary
@@ -36,7 +36,7 @@ interface ApiInterface {
 	suspend fun getSteps(
 		@Path("id") id: Int,
 		@Query("apiKey") apiKey: String
-	): Response<List<AnalizedStepsItem>>
+	): Response<List<AnalyzedStepsItem>>
 	
 	@GET("food/ingredients/autocomplete")
 	suspend fun autocompleteIngredientSearch(

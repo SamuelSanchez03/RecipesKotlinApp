@@ -1,7 +1,7 @@
 package com.example.recipesapp.domain
 
-//AnalizedStepsItem for managing analized steps API call
-data class AnalizedStepsItem(
+//AnalyzedStepsItem for managing analyzed steps API call
+data class AnalyzedStepsItem(
     val name: String,
     val steps: List<Step>
 )

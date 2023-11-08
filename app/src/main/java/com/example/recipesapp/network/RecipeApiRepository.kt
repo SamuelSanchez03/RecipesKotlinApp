@@ -1,12 +1,12 @@
 package com.example.recipesapp.network
 
-import android.util.Log
+import com.example.recipesapp.domain.AnalyzedStepsItem
 import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.SearchedIngredient
+import com.example.recipesapp.domain.Summary
 import com.example.recipesapp.domain.api.ApiKey
 import com.example.recipesapp.domain.repository.RecipeRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,31 +24,20 @@ class RecipeApiRepository @Inject constructor(
 			api.getRecipes(key, ingredients).body() ?: emptyList()
 		}
 	
-	/**/
+	/*Function to get a ingredients by complete or partial name it*/
 	override suspend fun autocompleteIngredientSearch(query: String): List<SearchedIngredient> =
 		withContext(Dispatchers.IO) {
-			api.autocompleteIngredientSearch(key ,query).body() ?: emptyList()
+			api.autocompleteIngredientSearch(key, query).body() ?: emptyList()
 		}
 	
-	/*TODO(Remove run blocking statements, should be called from ViewModel coroutine)*/
 	//Function to get the summary of a specific recipe
-	fun getSummaryByID(id: Int) {
-		val response = runBlocking { api.getSummary(apiKey = key, id = id) }
-		Log.d("MainActivity", response.body().toString())
+	override suspend fun getSummaryFromRecipeId(id: Int): Summary = withContext(Dispatchers.IO) {
+		api.getSummary(apiKey = key, id = id).body()!!
 	}
 	
 	//Function to get instructions for a specific recipe
-	fun getInstructionsByID(id: Int) {
-		val response = runBlocking { api.getSteps(apiKey = key, id = id) }
-		Log.d("MainActivity", response.body().toString())
-	}
-	
-	//Function to remove the tags and unnecessary information included in the summary by default
-	fun cleanSummary(summary: String): String {
-		var output = summary.replace("<b>", "")
-		output = output.replace("</b>", "")
-		output = output.replace("\\.[^\\.]+<a href=[\\S\\s]+".toRegex(), "")
-		output += "."
-		return output
-	}
+	override suspend fun getStepsToPrepareRecipeById(id: Int): List<AnalyzedStepsItem> =
+		withContext(Dispatchers.IO) {
+			api.getSteps(apiKey = key, id = id).body() ?: emptyList()
+		}
 }
