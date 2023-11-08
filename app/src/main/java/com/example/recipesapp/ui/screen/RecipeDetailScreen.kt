@@ -3,17 +3,23 @@ package com.example.recipesapp.ui.screen
 import android.content.res.Configuration
 import android.text.Html
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -28,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.recipesapp.R
+import com.example.recipesapp.domain.Step
 import com.example.recipesapp.domain.Summary
 import com.example.recipesapp.ui.viewmodel.RecipeInformation
 
@@ -57,6 +65,7 @@ fun DetailRecipeScreen(
 	recipeInformation: RecipeInformation?,
 	onBack: () -> Unit
 ) {
+	val padding = dimensionResource(id = R.dimen.padding_small)
 	BackHandler(enabled = true, onBack = onBack)
 	Column(
 		modifier = Modifier
@@ -74,6 +83,8 @@ fun DetailRecipeScreen(
 		) {
 			recipeInformation?.let {
 				val (summaryRecipe, steps) = it
+				val rSteps = steps[0].steps
+				val descriptions = getAllSteps(rSteps).toList()
 				Card(modifier = Modifier.fillMaxWidth()) {
 					val modifierAlignment = Modifier.align(Alignment.CenterHorizontally)
 					val modifierPadding = Modifier.padding(
@@ -121,12 +132,46 @@ fun DetailRecipeScreen(
 								id = R.dimen.subtitles
 							).value.sp
 						)
+						Text(
+							text = "Steps",
+							modifier = modifierAlignment.then(modifierPadding),
+							fontSize = dimensionResource(id = R.dimen.titles).value.sp,
+							fontWeight = FontWeight.Bold,
+							textAlign = TextAlign.Center
+						)
+						Text(
+							text = getStepDescription(descriptions),
+							modifier = modifierPadding,
+							fontSize = dimensionResource(
+								id = R.dimen.subtitles
+							).value.sp
+						)
 					}
 				}
 			} ?: LinearProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
 		}
 	}
 	
+}
+
+fun getAllSteps(steps : List<Step>): MutableList<String>
+{
+	var descriptions = mutableListOf<String>()
+	for(step in steps)
+	{
+		descriptions.add(step.number.toString() + " .- " + step.step + "\n")
+	}
+	return descriptions
+}
+
+fun getStepDescription(steps : List<String>): String
+{
+	var text = ""
+	for (s in steps)
+	{
+		text = text + s
+	}
+	return text
 }
 
 @Preview(showBackground = true)
