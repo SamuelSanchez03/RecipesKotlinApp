@@ -1,6 +1,7 @@
 package com.example.recipesapp.network
 
 import com.example.recipesapp.domain.AnalyzedStepsItem
+import com.example.recipesapp.domain.IngredientFromRecipe
 import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.SearchedIngredient
 import com.example.recipesapp.domain.Summary
@@ -40,4 +41,8 @@ class RecipeApiRepository @Inject constructor(
 		withContext(Dispatchers.IO) {
 			api.getSteps(apiKey = key, id = id).body() ?: emptyList()
 		}
+
+	override suspend fun getIngredients(id: Int): IngredientFromRecipe = withContext(Dispatchers.IO) {
+		api.getIngredients(apiKey = key, id = id).body()!!
+	}
 }

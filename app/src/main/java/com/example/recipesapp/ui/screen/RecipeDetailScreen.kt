@@ -36,6 +36,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.recipesapp.R
+import com.example.recipesapp.domain.IngredientFromRecipe
+import com.example.recipesapp.domain.IngredientItem
 import com.example.recipesapp.domain.Step
 import com.example.recipesapp.domain.Summary
 import com.example.recipesapp.ui.viewmodel.RecipeInformation
@@ -69,8 +72,8 @@ fun DetailRecipeScreen(
 	BackHandler(enabled = true, onBack = onBack)
 	Column(
 		modifier = Modifier
-		.fillMaxSize()
-		.verticalScroll(state = rememberScrollState()),
+			.fillMaxSize()
+			.verticalScroll(state = rememberScrollState()),
 		verticalArrangement = Arrangement.Center
 	) {
 		Column(
@@ -82,9 +85,13 @@ fun DetailRecipeScreen(
 			verticalArrangement = Arrangement.Center
 		) {
 			recipeInformation?.let {
-				val (summaryRecipe, steps) = it
-				val rSteps = steps[0].steps
-				val descriptions = getAllSteps(rSteps).toList()
+				val (summaryRecipe, steps, rIngredients) = it
+				val rSteps : List<Step>
+				if (steps.size != 0)
+					rSteps = steps[0].steps
+				else
+					rSteps = listOf<Step>()
+
 				Card(modifier = Modifier.fillMaxWidth()) {
 					val modifierAlignment = Modifier.align(Alignment.CenterHorizontally)
 					val modifierPadding = Modifier.padding(
@@ -132,6 +139,17 @@ fun DetailRecipeScreen(
 								id = R.dimen.subtitles
 							).value.sp
 						)
+
+						Text(
+							text = "Ingredients",
+							modifier = modifierAlignment.then(modifierPadding),
+							fontSize = dimensionResource(id = R.dimen.titles).value.sp,
+							fontWeight = FontWeight.Bold,
+							textAlign = TextAlign.Center
+						)
+						
+						ShowAllIngredients(listOfIngredients = rIngredients)
+
 						Text(
 							text = "Steps",
 							modifier = modifierAlignment.then(modifierPadding),
@@ -139,13 +157,8 @@ fun DetailRecipeScreen(
 							fontWeight = FontWeight.Bold,
 							textAlign = TextAlign.Center
 						)
-						Text(
-							text = getStepDescription(descriptions),
-							modifier = modifierPadding,
-							fontSize = dimensionResource(
-								id = R.dimen.subtitles
-							).value.sp
-						)
+						if(rSteps.size != 0)
+							ShowAllSteps(steps = rSteps)
 					}
 				}
 			} ?: LinearProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -153,28 +166,29 @@ fun DetailRecipeScreen(
 	}
 	
 }
-
-fun getAllSteps(steps : List<Step>): MutableList<String>
+@Composable
+fun ShowAllSteps(steps : List<Step>)
 {
-	var descriptions = mutableListOf<String>()
 	for(step in steps)
 	{
-		descriptions.add(step.number.toString() + " .- " + step.step + "\n")
+		Text(
+			text = step.number.toString() + ".- " + step.step
+		)
 	}
-	return descriptions
 }
 
-fun getStepDescription(steps : List<String>): String
+@Composable
+fun ShowAllIngredients(listOfIngredients: IngredientFromRecipe)
 {
-	var text = ""
-	for (s in steps)
+	for (ingredient in listOfIngredients.ingredients)
 	{
-		text = text + s
+		Text(
+			text = ingredient.name.capitalize() + "(" + ingredient.amount.metric.value.toString() + " " + ingredient.amount.metric.unit + ")"
+		)
 	}
-	return text
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun DetailPreview() {
 	DetailRecipeScreen(
@@ -196,4 +210,4 @@ fun DetailPreview() {
 		) to emptyList(),
 		onBack = {}
 	)
-}
+}*/
