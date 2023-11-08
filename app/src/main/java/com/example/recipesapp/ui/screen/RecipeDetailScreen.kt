@@ -139,27 +139,26 @@ fun DetailRecipeScreen(
 								id = R.dimen.subtitles
 							).value.sp
 						)
-
-						Text(
-							text = "Ingredients",
-							modifier = modifierAlignment.then(modifierPadding),
-							fontSize = dimensionResource(id = R.dimen.titles).value.sp,
-							fontWeight = FontWeight.Bold,
-							textAlign = TextAlign.Center
-						)
-						
-						ShowAllIngredients(listOfIngredients = rIngredients)
-
-						Text(
-							text = "Steps",
-							modifier = modifierAlignment.then(modifierPadding),
-							fontSize = dimensionResource(id = R.dimen.titles).value.sp,
-							fontWeight = FontWeight.Bold,
-							textAlign = TextAlign.Center
-						)
-						if(rSteps.size != 0)
-							ShowAllSteps(steps = rSteps)
 					}
+					Text(
+						text = "Ingredients",
+						modifier = modifierAlignment.then(modifierPadding),
+						fontSize = dimensionResource(id = R.dimen.titles).value.sp,
+						fontWeight = FontWeight.Bold,
+						textAlign = TextAlign.Center
+					)
+
+					ShowAllIngredients(listOfIngredients = rIngredients)
+
+					Text(
+						text = "Steps",
+						modifier = modifierAlignment.then(modifierPadding),
+						fontSize = dimensionResource(id = R.dimen.titles).value.sp,
+						fontWeight = FontWeight.Bold,
+						textAlign = TextAlign.Center
+					)
+					if(rSteps.size != 0)
+						ShowAllSteps(steps = rSteps)
 				}
 			} ?: LinearProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
 		}
