@@ -1,4 +1,4 @@
-package com.example.recipesapp.ui
+package com.example.recipesapp.ui.screen
 
 import android.widget.NumberPicker
 import androidx.compose.animation.AnimatedVisibility

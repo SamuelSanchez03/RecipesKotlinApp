@@ -31,6 +31,7 @@ import com.example.recipesapp.ui.screen.GettingRecipesScreen
 import com.example.recipesapp.ui.screen.NotFoundRecipesScreen
 import com.example.recipesapp.ui.screen.RECIPE_IMAGE
 import com.example.recipesapp.ui.screen.RecipeScreen
+import com.example.recipesapp.ui.screen.TopSearchBar
 import com.example.recipesapp.ui.state.RecipeSearchState
 import com.example.recipesapp.ui.viewmodel.RecipesViewModel
 import dagger.hilt.android.AndroidEntryPoint

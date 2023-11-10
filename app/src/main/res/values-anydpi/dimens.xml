@@ -2,4 +2,5 @@
 <resources>
 	<dimen name="width_image">208dp</dimen>
 	<dimen name="height_image">154dp</dimen>
+	<dimen name="text_summary_recipe_height">150dp</dimen>
 </resources>
