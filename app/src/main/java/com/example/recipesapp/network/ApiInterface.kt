@@ -1,7 +1,6 @@
 package com.example.recipesapp.network
 
 import com.example.recipesapp.domain.AnalyzedStepsItem
-import com.example.recipesapp.domain.IngredientFromRecipe
 import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.SearchedIngredient
 import com.example.recipesapp.domain.Summary
@@ -44,10 +43,4 @@ interface ApiInterface {
 		@Query("apiKey") key: String,
 		@Query("query") ingredient: String
 	): Response<List<SearchedIngredient>>
-
-	@GET("recipes/{id}/ingredientWidget.json")
-	suspend fun getIngredients(
-		@Path("id") id: Int,
-		@Query("apiKey") apiKey: String
-	): Response<IngredientFromRecipe>
 }

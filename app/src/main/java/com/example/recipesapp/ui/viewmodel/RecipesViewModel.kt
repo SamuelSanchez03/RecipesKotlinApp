@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipesapp.domain.AnalyzedStepsItem
-import com.example.recipesapp.domain.IngredientFromRecipe
 import com.example.recipesapp.domain.RecipeItem
 import com.example.recipesapp.domain.SelectableIngredient
 import com.example.recipesapp.domain.Summary
@@ -19,7 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-typealias RecipeInformation = Triple<Summary, List<AnalyzedStepsItem>, IngredientFromRecipe>
+typealias RecipeInformation = Pair<Summary, List<AnalyzedStepsItem>>
 @HiltViewModel
 class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeRepository) :
 	ViewModel() {
@@ -79,7 +78,7 @@ class RecipesViewModel @Inject constructor(private val recipeRepository: RecipeR
 		}
 		viewModelScope.launch {
 			recipesInformation[id] = recipeRepository.run {
-				Triple(getSummaryFromRecipeId(id), getStepsToPrepareRecipeById(id), getIngredients(id)).also{
+				Pair(getSummaryFromRecipeId(id), getStepsToPrepareRecipeById(id)).also{
 					currentRecipeInformation = it
 				}
 			}

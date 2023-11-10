@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -20,8 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.recipesapp.R
 import com.example.recipesapp.domain.AnalyzedStepsItem
@@ -39,17 +38,18 @@ fun StepsHorizontalPage(analyzedStepsItem: AnalyzedStepsItem) {
 			.padding(horizontal = smallPadding),
 		textAlign = TextAlign.Center
 	)
-	val pagerState = rememberPagerState(
-		initialPage = 0
-	) {
+	val pagerState = rememberPagerState(initialPage = 0) {
 		analyzedStepsItem.steps.size
 	}
 	HorizontalPager(
 		state = pagerState,
 		contentPadding = PaddingValues(all = mediumPadding),
-		pageSpacing = smallPadding
+		pageSpacing = smallPadding,
+		beyondBoundsPageCount = analyzedStepsItem.steps.size
 	) { page ->
-		Card(modifier = Modifier.fillMaxWidth()) {
+		Card(
+			modifier = Modifier.fillMaxWidth()
+		) {
 			val paddingTitle = Modifier.padding(
 				PaddingValues(
 					vertical = mediumPadding
@@ -57,40 +57,28 @@ fun StepsHorizontalPage(analyzedStepsItem: AnalyzedStepsItem) {
 			)
 			Row(
 				horizontalArrangement = Arrangement.SpaceEvenly,
-				modifier = Modifier.fillMaxWidth().height(800.dp),
+				modifier = Modifier.fillMaxWidth(),
 			) {
 				if (analyzedStepsItem.steps[page].ingredients.isNotEmpty())
-					Column {
-						Text(
-							text = stringResource(id = R.string.ingredients),
-							fontSize = dimensionResource(
-								id = R.dimen.titles
-							).value.sp,
-							textAlign = TextAlign.Center,
-							modifier = paddingTitle
-						)
-						analyzedStepsItem.steps[page].ingredients.forEach { ingredient ->
-							TextItemList(text = ingredient.name)
-						}
-					}
+					ItemsList(
+						modifier = paddingTitle,
+						title = stringResource(id = R.string.ingredients),
+						items = analyzedStepsItem.steps[page].ingredients,
+						text = { it.name }
+					)
 				if (analyzedStepsItem.steps[page].equipment.isNotEmpty())
-					Column {
-						Text(
-							text = stringResource(id = R.string.equipment),
-							fontSize = dimensionResource(
-								id = R.dimen.titles
-							).value.sp,
-							textAlign = TextAlign.Center,
-							modifier = paddingTitle
-						)
-						analyzedStepsItem.steps[page].equipment.forEach { equipment ->
-							TextItemList(text = equipment.name)
-						}
-					}
+					ItemsList(
+						modifier = paddingTitle,
+						title = stringResource(id = R.string.equipment),
+						items = analyzedStepsItem.steps[page].equipment,
+						text = { it.name }
+					)
 			}
 			Text(
 				text = analyzedStepsItem.steps[page].step,
-				modifier = Modifier.fillMaxWidth().padding(all = mediumPadding),
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(all = mediumPadding),
 				textAlign = TextAlign.Center,
 				fontSize = dimensionResource(id = R.dimen.subtitles).value.sp
 			)
@@ -98,7 +86,8 @@ fun StepsHorizontalPage(analyzedStepsItem: AnalyzedStepsItem) {
 				text = stringResource(id = R.string.step, analyzedStepsItem.steps[page].number),
 				modifier = Modifier
 					.align(Alignment.End)
-					.padding(end = smallPadding, bottom = smallPadding)
+					.padding(end = smallPadding, bottom = smallPadding),
+				fontWeight = FontWeight.ExtraBold
 			)
 		}
 	}
@@ -117,4 +106,21 @@ private fun TextItemList(text: String) = Row(horizontalArrangement = Arrangement
 		fontSize = dimensionResource(id = R.dimen.subtitles).value.sp,
 		modifier = modifierAlign
 	)
+}
+
+@Composable
+private fun <T> ItemsList(modifier: Modifier, title: String, items: List<T>, text: (T) -> String) {
+	Column {
+		Text(
+			text = title,
+			fontSize = dimensionResource(
+				id = R.dimen.titles
+			).value.sp,
+			textAlign = TextAlign.Center,
+			modifier = modifier
+		)
+		items.forEach {
+			TextItemList(text = text(it))
+		}
+	}
 }
